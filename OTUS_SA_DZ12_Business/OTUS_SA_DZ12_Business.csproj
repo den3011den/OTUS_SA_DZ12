@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OTUS_SA_DZ12_DataAccess\OTUS_SA_DZ12_DataAccess.csproj" />
+    <ProjectReference Include="..\OTUS_SA_DZ12_Models\OTUS_SA_DZ12_Models.csproj" />
+  </ItemGroup>
+
+</Project>
