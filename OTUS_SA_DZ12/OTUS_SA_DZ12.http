@@ -1,0 +1,6 @@
+@OTUS_SA_DZ12_HostAddress = http://localhost:5221
+
+GET {{OTUS_SA_DZ12_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
