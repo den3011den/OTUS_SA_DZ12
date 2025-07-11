@@ -25,13 +25,41 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
         /// </summary>
         public void InitializeDb()
         {
-            Console.WriteLine("Инициализация БД: Удаление БД ... ");
-            _db.Database.EnsureDeleted();
-            Console.WriteLine("Инициализация БД: Удаление БД - Выполнено");
+            //Console.WriteLine("Инициализация БД: Удаление БД ... ");
+            //_db.Database.EnsureDeleted();
+            //Console.WriteLine("Инициализация БД: Удаление БД - Выполнено");
 
-            Console.WriteLine("Инициализация БД: Создание БД ... ");
-            _db.Database.EnsureCreated();
-            Console.WriteLine("Инициализация БД: Создание БД - Выполнено");
+            //Console.WriteLine("Инициализация БД: Создание БД ... ");
+            //_db.Database.EnsureCreated();
+            //Console.WriteLine("Инициализация БД: Создание БД - Выполнено");
+
+            Console.WriteLine("Инициализация БД: Очистка таблицы Feedbacks ... ");
+            _db.Feedbacks.RemoveRange(_db.Feedbacks);
+            _db.SaveChanges();
+
+            Console.WriteLine("Инициализация БД: Очистка таблицы OrdersDishes ... ");
+            _db.OrdersDishes.RemoveRange(_db.OrdersDishes);
+            _db.SaveChanges();
+
+            Console.WriteLine("Инициализация БД: Очистка таблицы Orders ... ");
+            _db.Orders.RemoveRange(_db.Orders);
+            _db.SaveChanges();
+
+            Console.WriteLine("Инициализация БД: Очистка таблицы ReceiveMethods ... ");
+            _db.ReceiveMethods.RemoveRange(_db.ReceiveMethods);
+            _db.SaveChanges();
+
+            Console.WriteLine("Инициализация БД: Очистка таблицы States ... ");
+            _db.States.RemoveRange(_db.States);
+            _db.SaveChanges();
+
+            Console.WriteLine("Инициализация БД: Очистка таблицы Dishes ... ");
+            _db.Dishes.RemoveRange(_db.Dishes);
+            _db.SaveChanges();
+
+            Console.WriteLine("Инициализация БД: Очистка таблицы Customers ... ");
+            _db.Customers.RemoveRange(_db.Customers);
+            _db.SaveChanges();
 
             Console.WriteLine("Инициализация БД: Заполнение таблицы Customers ... ");
             FillTable<Customer>(InitialDataFactory.Customers);
