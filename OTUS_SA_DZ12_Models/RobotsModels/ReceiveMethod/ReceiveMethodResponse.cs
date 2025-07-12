@@ -13,7 +13,7 @@ namespace OTUS_SA_DZ12_Models.RobotsModels.ReceiveMethod
         /// </summary>        
         [DisplayName("Ид записи")]
         [Required]
-        [Range(1, int.MinValue)]
+        [Range(1, int.MaxValue)]
         public int Id { get; set; }
 
         /// <summary>

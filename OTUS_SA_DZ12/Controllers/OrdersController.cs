@@ -19,6 +19,7 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
 
         private readonly IStateRepository _stateRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly IOrderDishRepository _orderDishRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -27,10 +28,12 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         /// <param name="orderRepository">Репозиторий работы с заказами</param>
         /// <param name="stateRepository">Репозиторий работы со справочником статусов заказов</param>
         /// <param name="mapper">Маппер сущностей одна в другую</param>
-        public OrdersController(IOrderRepository orderRepository, IStateRepository stateRepository, IMapper mapper)
+        public OrdersController(IOrderRepository orderRepository, IStateRepository stateRepository,
+            IOrderDishRepository orderDishRepository, IMapper mapper)
         {
             _orderRepository = orderRepository;
             _stateRepository = stateRepository;
+            _orderDishRepository = orderDishRepository;
             _mapper = mapper;
         }
 
@@ -171,6 +174,64 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
             {
                 return BadRequest("Ошибка при выполнении запроса: " + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Повторение заказа
+        /// </summary>
+        /// <param name="id">ИД повторяемого заказа</param>
+        /// <response code="201">Успешное выполнение. Заказ создан</response>
+        /// <response code="400">Не удалось добавить заказ. Причина описана в ответе</response>  
+        /// <response code="404">Не найден заказ с заданным ИД</response>  
+        /// <returns>Возвращает созданый заказ - объект типа OrderResponse</returns>
+        [HttpPost("id")]
+        [ProducesResponseType(typeof(OrderResponse), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<OrderResponse>> RepeatOrderAsync(int id)
+        {
+            var foundOrder = await _orderRepository.GetByIdAsync(id);
+            if (foundOrder == null)
+            {
+                return NotFound("Заказ с ИД = " + id.ToString() + " не найден");
+            }
+
+            Order orderForAdding = new Order();
+
+            orderForAdding.OrderDate = DateTime.Now;
+            orderForAdding.StateId = 1;
+            orderForAdding.State = await _stateRepository.GetByIdAsync(1);
+            orderForAdding.Amount = foundOrder.Amount;
+            orderForAdding.CustomerId = foundOrder.CustomerId;
+            orderForAdding.Customer = foundOrder.Customer;
+            orderForAdding.ReceiveMethodId = foundOrder.ReceiveMethodId;
+            orderForAdding.ReceiveMethod = foundOrder.ReceiveMethod;
+
+            var addedOrder = await _orderRepository.AddAsync(orderForAdding);
+            var routVar = "";
+            if (Request != null)
+            {
+                routVar = new UriBuilder(Request.Scheme, Request.Host.Host, (int)Request.Host.Port, Request.Path.Value).ToString()
+                    + "/" + addedOrder.Id.ToString();
+                routVar = routVar.Replace("/id", "");
+            }
+
+            foreach (OrderDish orderDish in foundOrder.OrdersDishesList)
+            {
+                await _orderDishRepository.AddAsync(
+                    new OrderDish
+                    {
+                        OrderId = addedOrder.Id,
+                        DishId = orderDish.DishId,
+                        Dish = orderDish.Dish,
+                        Quantity = orderDish.Quantity,
+                        Price = orderDish.Price
+                    });
+            }
+            //await Task.Delay(2000);            
+
+            var gotOrder = await _orderRepository.GetByIdAsync(addedOrder.Id);
+            return Created(routVar, _mapper.Map<Order, OrderResponse>(gotOrder));
         }
     }
 }
