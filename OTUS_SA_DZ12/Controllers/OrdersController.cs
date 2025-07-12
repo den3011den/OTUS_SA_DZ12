@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OTUS_SA_DZ12_Business.Repository.IRepository;
 using OTUS_SA_DZ12_Domain.Robots;
 using OTUS_SA_DZ12_Models.RobotsModels.Order;
+using OTUS_SA_DZ12_Models.RobotsModels.OrderDish;
 using OTUS_SA_DZ12_Models.RobotsModels.State;
 using System.Net;
 
@@ -20,6 +21,9 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         private readonly IStateRepository _stateRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderDishRepository _orderDishRepository;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IDishRepository _dishRepository;
+        private readonly IReceiveMethodRepository _receiveMethodRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -28,12 +32,19 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         /// <param name="orderRepository">Репозиторий работы с заказами</param>
         /// <param name="stateRepository">Репозиторий работы со справочником статусов заказов</param>
         /// <param name="mapper">Маппер сущностей одна в другую</param>
-        public OrdersController(IOrderRepository orderRepository, IStateRepository stateRepository,
-            IOrderDishRepository orderDishRepository, IMapper mapper)
+        public OrdersController(IOrderRepository orderRepository, IStateRepository stateRepository
+            , IOrderDishRepository orderDishRepository
+            , ICustomerRepository customerRepository
+            , IDishRepository dishRepository
+            , IReceiveMethodRepository receiveMethodRepository
+            , IMapper mapper)
         {
             _orderRepository = orderRepository;
             _stateRepository = stateRepository;
             _orderDishRepository = orderDishRepository;
+            _customerRepository = customerRepository;
+            _dishRepository = dishRepository;
+            _receiveMethodRepository = receiveMethodRepository;
             _mapper = mapper;
         }
 
@@ -229,6 +240,111 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
                     });
             }
             //await Task.Delay(2000);            
+
+            var gotOrder = await _orderRepository.GetByIdAsync(addedOrder.Id);
+            return Created(routVar, _mapper.Map<Order, OrderResponse>(gotOrder));
+        }
+
+
+        /// <summary>
+        /// Создание заказа
+        /// </summary>        
+        /// <param name="request">Данные создаваемого заказа - объект типа OrderCreateRequest</param>
+        /// <response code="201">Успешное выполнение. Заказ создан</response>
+        /// <response code="400">Не удалось создать заказ. Причина описана в ответе</response>  
+        /// <response code="404">Не найдена одна из составляющих заказа</response>  
+        /// <returns>Возвращает созданый заказ - объект типа OrderResponse</returns>
+        [HttpPost()]
+        [ProducesResponseType(typeof(OrderResponse), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<OrderResponse>> CreateOrderAsync(OrderCreateRequest request)
+        {
+            var foundCustomer = await _customerRepository.GetByIdAsync(request.CustomerId);
+            if (foundCustomer == null)
+            {
+                return NotFound("Не найден клиент с ИД = " + request.CustomerId.ToString());
+            }
+
+            if (foundCustomer.IsArchive)
+                return BadRequest("Клиент с ИД = " + foundCustomer.Id.ToString() + " удалён в архив в справочнике клиентов");
+
+            var foundReceiveMethod = await _receiveMethodRepository.GetByIdAsync(request.ReceiveMethodId);
+            if (foundReceiveMethod == null)
+            {
+                return NotFound("Не найден способ получения с ИД = " + request.CustomerId.ToString());
+            }
+
+            if (foundReceiveMethod.IsArchive)
+                return BadRequest("Способ получения с ИД = " + foundReceiveMethod.Id.ToString() + " удалён в архив в справочнике способов получения заказов");
+
+            double summaDishes = 0;
+
+            if (request.OrdersDishesList == null || request.OrdersDishesList.Count() <= 0)
+            {
+                return BadRequest("Нет блюд в заказе");
+            }
+
+            foreach (var orderDish in request.OrdersDishesList)
+            {
+                var foundOrderDish = await _dishRepository.GetByIdAsync(orderDish.DishId);
+                if (foundOrderDish == null)
+                    return NotFound("Не найдено блюдо с ИД = " + orderDish.DishId.ToString());
+                if (foundOrderDish.IsArchive)
+                    return BadRequest("Блюдо с ИД = " + orderDish.DishId.ToString() + " удалено в архив в справочнике блюд");
+                if (orderDish.Quantity <= 0)
+                    return BadRequest("У блюда с ИД = " + orderDish.DishId.ToString() + " установлено нулевое или отрицательное количество");
+                if (orderDish.Price <= 0)
+                    return BadRequest("У блюда с ИД = " + orderDish.DishId.ToString() + " установлена нулевая или отрицательная цена");
+                summaDishes = summaDishes + (orderDish.Quantity * orderDish.Price);
+            }
+
+            var queryDuplicate = request.OrdersDishesList
+                .GroupBy(e => e.DishId)
+                .Where(g => g.Count() > 1)
+                .Select(g => new { DishId = g.Key, Count = g.Count() })
+                .ToList();
+
+            if (queryDuplicate != null && queryDuplicate.Count() > 0)
+            {
+                string duplStr = "";
+                foreach (var query in queryDuplicate)
+                    duplStr = duplStr + " Блюдо с ИД = " + query.DishId.ToString() + " встречается " + query.Count.ToString() + " раза\n";
+                return BadRequest("В заказе есть повторяющиеся блюда:\n" + duplStr);
+            }
+
+            Order orderForAdding = new Order();
+
+            orderForAdding.OrderDate = DateTime.Now;
+            orderForAdding.StateId = 1;
+            orderForAdding.State = await _stateRepository.GetByIdAsync(1);
+            orderForAdding.Amount = summaDishes;
+            orderForAdding.CustomerId = foundCustomer.Id;
+            orderForAdding.Customer = foundCustomer;
+            orderForAdding.ReceiveMethodId = foundReceiveMethod.Id;
+            orderForAdding.ReceiveMethod = foundReceiveMethod;
+
+            var addedOrder = await _orderRepository.AddAsync(orderForAdding);
+            var routVar = "";
+            if (Request != null)
+            {
+                routVar = new UriBuilder(Request.Scheme, Request.Host.Host, (int)Request.Host.Port, Request.Path.Value).ToString()
+                    + "/" + addedOrder.Id.ToString();
+                routVar = routVar.Replace("/id", "");
+            }
+
+            foreach (OrderDishCreateRequest orderDish in request.OrdersDishesList)
+            {
+                await _orderDishRepository.AddAsync(
+                    new OrderDish
+                    {
+                        OrderId = addedOrder.Id,
+                        DishId = orderDish.DishId,
+                        Dish = await _dishRepository.GetByIdAsync(orderDish.DishId),
+                        Quantity = orderDish.Quantity,
+                        Price = orderDish.Price
+                    });
+            }
 
             var gotOrder = await _orderRepository.GetByIdAsync(addedOrder.Id);
             return Created(routVar, _mapper.Map<Order, OrderResponse>(gotOrder));
