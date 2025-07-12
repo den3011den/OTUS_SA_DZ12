@@ -32,10 +32,10 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
 
         /// <summary>
         /// Получить список всех блюд
-        /// </summary>
-        /// <returns>Возвращает список блюд - объекты типа DishResponse</returns>
+        /// </summary>        
         /// <response code="200">Успешное выполнение</response>
         /// <response code="400">Ошибка при выполнении запроса к БД</response>
+        /// <returns>Возвращает список блюд - объекты типа DishResponse</returns>
         [HttpGet()]
         [ProducesResponseType(typeof(List<DishResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]

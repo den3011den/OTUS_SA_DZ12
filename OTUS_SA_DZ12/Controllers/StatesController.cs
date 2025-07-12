@@ -32,10 +32,10 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
 
         /// <summary>
         /// Получить список всех статусов
-        /// </summary>
-        /// <returns>Возвращает список всех статусов - объекты типа StateResponse</returns>
+        /// </summary>        
         /// <response code="200">Успешное выполнение</response>
         /// <response code="400">Ошибка при выполнении запроса к БД</response>
+        /// <returns>Возвращает список всех статусов - объекты типа StateResponse</returns>
         [HttpGet()]
         [ProducesResponseType(typeof(List<StateResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]

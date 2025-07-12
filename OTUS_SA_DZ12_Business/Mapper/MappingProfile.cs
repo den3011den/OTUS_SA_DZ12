@@ -2,6 +2,9 @@
 using OTUS_SA_DZ12_Domain.Robots;
 using OTUS_SA_DZ12_Models.RobotsModels.Customers;
 using OTUS_SA_DZ12_Models.RobotsModels.Dish;
+using OTUS_SA_DZ12_Models.RobotsModels.Feedback;
+using OTUS_SA_DZ12_Models.RobotsModels.Order;
+using OTUS_SA_DZ12_Models.RobotsModels.OrderDish;
 using OTUS_SA_DZ12_Models.RobotsModels.ReceiveMethod;
 using OTUS_SA_DZ12_Models.RobotsModels.State;
 //using Catalog_Models.CatalogModels.Author;
@@ -21,6 +24,11 @@ namespace Catalog_Business.Mapper
             CreateMap<Customer, CustomerResponse>();
             CreateMap<ReceiveMethod, ReceiveMethodResponse>();
             CreateMap<Dish, DishResponse>();
+            CreateMap<Dish, OrderDishResponse>();
+            CreateMap<Feedback, OrderFeedbackResponse>();
+            CreateMap<OrderDish, OrderOrderDishResponse>();
+            CreateMap<Order, OrderResponse>();
+
 
             //CreateMap<Publisher, PublisherItemResponse>();
             //CreateMap<Publisher, PublisherItemCreateUpdateRequest>();

@@ -9,5 +9,11 @@
             NotArchiveOnly,
             All
         }
+
+        public enum OrderDateEnum
+        {
+            ASC,
+            DESC
+        }
     }
 }
