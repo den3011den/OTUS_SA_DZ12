@@ -1,4 +1,9 @@
 ﻿using AutoMapper;
+using OTUS_SA_DZ12_Domain.Robots;
+using OTUS_SA_DZ12_Models.RobotsModels.Customers;
+using OTUS_SA_DZ12_Models.RobotsModels.Dish;
+using OTUS_SA_DZ12_Models.RobotsModels.ReceiveMethod;
+using OTUS_SA_DZ12_Models.RobotsModels.State;
 //using Catalog_Models.CatalogModels.Author;
 //using Catalog_Models.CatalogModels.Book;
 //using Catalog_Models.CatalogModels.BookInstance;
@@ -11,6 +16,11 @@ namespace Catalog_Business.Mapper
     {
         public MappingProfile()
         {
+
+            CreateMap<State, StateResponse>();
+            CreateMap<Customer, CustomerResponse>();
+            CreateMap<ReceiveMethod, ReceiveMethodResponse>();
+            CreateMap<Dish, DishResponse>();
 
             //CreateMap<Publisher, PublisherItemResponse>();
             //CreateMap<Publisher, PublisherItemCreateUpdateRequest>();

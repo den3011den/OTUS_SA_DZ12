@@ -1,4 +1,6 @@
-﻿namespace OTUS_SA_DZ12_Domain.Robots
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OTUS_SA_DZ12_Domain.Robots
 {
     /// <summary>
     /// Отзывы
@@ -29,6 +31,8 @@
         /// <summary>
         /// Отзыв
         /// </summary>
+
+        [Column("Feedback")]
         public string FeedbackText { get; set; }
 
         /// <summary>

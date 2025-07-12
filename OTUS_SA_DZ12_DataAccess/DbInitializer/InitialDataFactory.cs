@@ -146,7 +146,7 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                             PhoneNumber = "+7-" + i.ToString() + i.ToString() + i.ToString() + "-" + i.ToString() + i.ToString() + i.ToString()
                                  + "-" + i.ToString() + i.ToString() + "-" + i.ToString() + i.ToString(),
                             Email = "address" + i.ToString() + "@" + "server" + i.ToString() + ".com",
-                            AddTime = DateTime.Now,
+                            AddDate = DateTime.Now,
                             IsBonusParticipant = (i % 2 == 0) ? true : false,
                             IsArchive = false,
                         }
@@ -165,7 +165,7 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                             PhoneNumber = "+7-" + i.ToString() + i.ToString() + i.ToString() + "-" + i.ToString() + i.ToString() + i.ToString()
                                  + "-" + i.ToString() + i.ToString() + "-" + i.ToString() + i.ToString(),
                             Email = "address" + i.ToString() + "@" + "server" + i.ToString() + ".com",
-                            AddTime = DateTime.Now,
+                            AddDate = DateTime.Now,
                             IsBonusParticipant = (i % 2 == 0) ? true : false,
                             IsArchive = true,
                         }
@@ -184,7 +184,8 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                 StateId = 6,
                 Amount = 100.00,
                 CustomerId = 1,
-                ReceiveMethodId = 1
+                ReceiveMethodId = 1,
+                ReceiveDate = DateTime.Now
             },
             new Order()
             {
@@ -193,7 +194,8 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                 StateId = 6,
                 Amount = 1000.00,
                 CustomerId = 1,
-                ReceiveMethodId = 1
+                ReceiveMethodId = 1,
+                ReceiveDate = DateTime.Now
             },
             new Order()
             {
@@ -202,7 +204,8 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                 StateId = 6,
                 Amount = 500.00,
                 CustomerId = 1,
-                ReceiveMethodId = 1
+                ReceiveMethodId = 1,
+                ReceiveDate = DateTime.Now
             },
             new Order()
             {
@@ -211,7 +214,8 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                 StateId = 6,
                 Amount = 580.10,
                 CustomerId = 1,
-                ReceiveMethodId = 2
+                ReceiveMethodId = 2,
+                ReceiveDate = DateTime.Now
             },
             new Order()
             {
@@ -229,7 +233,8 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                 StateId = 6,
                 Amount = 100.00,
                 CustomerId = 3,
-                ReceiveMethodId = 1
+                ReceiveMethodId = 1,
+                ReceiveDate = DateTime.Now
             },
             new Order()
             {
@@ -238,7 +243,8 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                 StateId = 6,
                 Amount = 1000.00,
                 CustomerId = 3,
-                ReceiveMethodId = 1
+                ReceiveMethodId = 1,
+                ReceiveDate = DateTime.Now
             },
             new Order()
             {
@@ -247,7 +253,8 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                 StateId = 6,
                 Amount = 500.00,
                 CustomerId = 3,
-                ReceiveMethodId = 1
+                ReceiveMethodId = 1,
+                ReceiveDate = DateTime.Now
             },
             new Order()
             {
@@ -555,7 +562,7 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
                 FeedbackText = "Текст отзыва на заказ 2 блюдо 13",
                 Stars = 5,
             },
-                        new Feedback()
+            new Feedback()
             {
                 Id = 3,
                 OrderId = 2,

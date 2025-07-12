@@ -41,7 +41,7 @@
         /// <summary>
         /// Дата/время добавления записи
         /// </summary>
-        public DateTime AddTime { get; set; } = DateTime.Now;
+        public DateTime AddDate { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Признак участия в программе лояльности

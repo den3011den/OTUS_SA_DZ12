@@ -7,7 +7,6 @@ using OTUS_SA_DZ12_DataAccess.DbInitializer;
 using OTUS_SA_DZ12_WebAPI.Controllers;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
-using System.Reflection.Metadata;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace OTUS_SA_DZ12_WebAPI
@@ -67,32 +66,13 @@ namespace OTUS_SA_DZ12_WebAPI
 
                 // include models xml documentation
 
-                /*
-                var modelsAssembly = typeof(Catalog_Models.CatalogModels.Author.AuthorItemCreateUpdateRequest).Assembly;
-                c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
-                modelsAssembly = typeof(Catalog_Models.CatalogModels.Author.AuthorItemResponse).Assembly;
+
+                var modelsAssembly = typeof(OTUS_SA_DZ12_Models.RobotsModels.Customers.CustomerResponse).Assembly;
                 c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
 
-                modelsAssembly = typeof(Catalog_Models.CatalogModels.Publisher.PublisherItemCreateUpdateRequest).Assembly;
-                c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
-                modelsAssembly = typeof(Catalog_Models.CatalogModels.Publisher.PublisherItemResponse).Assembly;
+                modelsAssembly = typeof(OTUS_SA_DZ12_Models.RobotsModels.State.StateResponse).Assembly;
                 c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
 
-                modelsAssembly = typeof(Catalog_Models.CatalogModels.Book.AuthorForBookRequest).Assembly;
-                c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
-                modelsAssembly = typeof(Catalog_Models.CatalogModels.Book.BookItemResponse).Assembly;
-                c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
-                modelsAssembly = typeof(Catalog_Models.CatalogModels.Book.BookItemCreateUpdateRequest).Assembly;
-                c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
-
-                modelsAssembly = typeof(Catalog_Models.CatalogModels.BookToAuthor.BookToAuthorResponse).Assembly;
-                c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
-
-                modelsAssembly = typeof(Catalog_Models.CatalogModels.BookInstance.BookInstanceCreateUpdateRequest).Assembly;
-                c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
-                modelsAssembly = typeof(Catalog_Models.CatalogModels.BookInstance.BookInstanceResponse).Assembly;
-                c.IncludeXmlComments(GetXmlDocumentationFileFor(modelsAssembly));
-                */
 
                 //c.OperationFilter<ReApplyOptionalRouteParameterOperationFilter>();
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Restaurant service API (Robots)", Version = "v1" });
@@ -110,7 +90,8 @@ namespace OTUS_SA_DZ12_WebAPI
 
 
             //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddAutoMapper(cfg => cfg.AddMaps(typeof(AssemblyReference).Assembly));
+            //services.AddAutoMapper(cfg => cfg.AddMaps(typeof(AssemblyReference).Assembly));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -133,14 +114,6 @@ namespace OTUS_SA_DZ12_WebAPI
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
-                //app.UseSwagger(c =>
-                //{
-                //    c.PreSerializeFilters.Add((swagger, httpReq) =>
-                //    {
-                //        swagger.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"https://{httpReq.Host.Host}" } };
-                //    });
-                //});
-
                 app.UseSwaggerUI();
                 app.UseDeveloperExceptionPage();
             }
