@@ -44,7 +44,7 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         /// <returns>Возвращает созданый отзыв - объект типа OrderFeedbackResponse</returns>
         /// <response code="201">Успешное выполнение. Отзыв создан</response>
         /// <response code="400">Не удалось добавить отзыв. Причина описана в ответе</response>  
-        /// <response code="404">Не найдено блюдо в заказе</response>  
+        /// <response code="404">Не найдено блюдо в заказе</response>          
         [HttpPost]
         [ProducesResponseType(typeof(OrderFeedbackResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
@@ -97,11 +97,11 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         /// <summary>
         /// Получить отзыв по ИД отзыва
         /// </summary>
-        /// <param name="id">ИД отзыва</param>        
+        /// <param name="id">ИД отзыва</param>
+        /// <returns>Возвращает отзыв - объект типа OrderFeedbackResponse</returns>
         /// <response code="200">Успешное выполнение</response>
         /// <response code="400">Ошибка при выполнении запроса к БД</response>
-        /// <response code="404">Отзыв с заданным ИД не найден</response>
-        /// <returns>Возвращает отзыв - объект типа OrderFeedbackResponse</returns>
+        /// <response code="404">Отзыв с заданным ИД не найден</response>                
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(OrderFeedbackResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]

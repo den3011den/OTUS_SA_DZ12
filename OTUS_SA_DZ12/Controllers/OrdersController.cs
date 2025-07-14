@@ -53,10 +53,10 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         /// Получить заказ по ИД заказа
         /// </summary>
         /// <param name="id">ИД заказа (целочисленный номер заказа)</param>        
+        /// <returns>Возвращает заказ - объект типа OrderResponse</returns>
         /// <response code="200">Успешное выполнение</response>
         /// <response code="400">Ошибка при выполнении запроса к БД</response>
-        /// <response code="404">Заказ с заданным ИД не найден</response>
-        /// <returns>Возвращает заказ - объект типа OrderResponse</returns>
+        /// <response code="404">Заказ с заданным ИД не найден</response>        
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(OrderResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
@@ -84,10 +84,10 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         /// Получить статус заказа по ИД заказа
         /// </summary>
         /// <param name="id">ИД заказа (целочисленный номер заказа)</param>
+        /// <returns>Возвращает статус заказа - объект типа StateResponse</returns>
         /// <response code="200">Успешное выполнение</response>
         /// <response code="400">Ошибка при выполнении запроса к БД</response>
-        /// <response code="404">Заказ с заданным ИД не найден</response>
-        /// <returns>Возвращает статус заказа - объект типа StateResponse</returns>
+        /// <response code="404">Заказ с заданным ИД не найден</response>        
         [HttpGet("{id}/status")]
         [ProducesResponseType(typeof(StateResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
@@ -113,7 +113,7 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
 
         /// <summary>
         /// Просмотр истории заказов
-        /// </summary>
+        /// </summary>        
         /// <param name="startOrderDate">        
         /// 
         /// <details>
@@ -143,7 +143,10 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         /// <param name="orderById">Указывает упорядочивание по ИД заказа - ASC-по возрастанию номера заказа, DESC-по убыванию номера заказа. По умолчанию - АSC </param>
         /// <param name="itemsOnPage">Количество заказов на странице при постаничном запросе. Если itemsOnPage и pageNumber оба равны нулю - выдаются все заказы</param>
         /// <param name="pageNumber">Номер запрашиваемой страницы при постаничном запросе. Если itemsOnPage и pageNumber оба равны нулю - выдаются все заказы</param>
-        /// <returns>Возвращает список заказов с учётом указанных при запросе параметров - список объектов типа OrderResponse</returns>
+        /// <returns>Возвращает список заказов с учётом указанных при запросе параметров - список объектов типа OrderResponse</returns>        
+        /// <response code="200">Успешное выполнение</response>
+        /// <response code="400">Не удалось выполнить запрос. Ошибка доступа к БД или неверные параметры запроса. Причина описана в ответе</response>  
+        /// <response code="404">Не найдено элементов соответствующих заданным условиям запроса</response>        
         [HttpGet()]
         [ProducesResponseType(typeof(OrderResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
@@ -166,7 +169,7 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
                     return BadRequest("Один из параметров itemsOnPage или pageNumber меньше нуля");
 
                 var gotOrders = await _orderRepository.GetOrdersByTimeIntervalOfOrderdateAsync((DateTime)startOrderDate, (DateTime)endOrderDate);
-                if (gotOrders == null)
+                if (gotOrders == null || gotOrders.Count() <= 0)
                 {
                     return NotFound("Не найдено ни одного заказа");
                 }
@@ -227,10 +230,10 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         /// Повторение заказа
         /// </summary>
         /// <param name="id">ИД повторяемого заказа</param>
+        /// <returns>Возвращает созданый заказ - объект типа OrderResponse</returns> 
         /// <response code="201">Успешное выполнение. Заказ создан</response>
         /// <response code="400">Не удалось добавить заказ. Причина описана в ответе</response>  
-        /// <response code="404">Не найден заказ с заданным ИД</response>  
-        /// <returns>Возвращает созданый заказ - объект типа OrderResponse</returns>
+        /// <response code="404">Не найден заказ с заданным ИД</response>                 
         [HttpPost("id")]
         [ProducesResponseType(typeof(OrderResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
@@ -284,12 +287,12 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
 
         /// <summary>
         /// Создание заказа
-        /// </summary>        
+        /// </summary>               
         /// <param name="request">Данные создаваемого заказа - объект типа OrderCreateRequest</param>
+        /// <returns>Возвращает созданый заказ - объект типа OrderResponse</returns>
         /// <response code="201">Успешное выполнение. Заказ создан</response>
         /// <response code="400">Не удалось создать заказ. Причина описана в ответе</response>  
-        /// <response code="404">Не найдена одна из составляющих заказа</response>  
-        /// <returns>Возвращает созданый заказ - объект типа OrderResponse</returns>
+        /// <response code="404">Не найдена одна из составляющих заказа</response>          
         [HttpPost()]
         [ProducesResponseType(typeof(OrderResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]

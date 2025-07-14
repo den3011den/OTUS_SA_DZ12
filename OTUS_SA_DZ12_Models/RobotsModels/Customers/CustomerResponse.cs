@@ -39,6 +39,11 @@ namespace OTUS_SA_DZ12_Models.RobotsModels.Customers
         [MaxLength(100, ErrorMessage = "Длинна отчества должна быть меньше или равна 100 символам")]
         public string MiddleName { get; set; }
 
+        ///// <summary>
+        ///// Полное имя
+        ///// </summary>        
+        //public string FullName { get; set; }
+
         /// <summary>
         /// Адрес
         /// </summary>

@@ -53,5 +53,11 @@
         /// </summary>
         public bool IsArchive { get; set; } = false;
 
+        ///// <summary>
+        ///// Полное имя
+        ///// </summary>
+        //[NotMapped]
+        //public string FullName => FirstName + (String.IsNullOrWhiteSpace(MiddleName) ? " " : " " + MiddleName.Trim() + " ") + LastName;
+
     }
 }
