@@ -30,5 +30,26 @@ namespace OTUS_SA_DZ12_Business.Repository
                 return order.State;
             }
         }
+
+        public async Task<IEnumerable<Order>> GetOrdersByTimeIntervalOfOrderdateAsync(DateTime startTime, DateTime endTime)
+        {
+            DateTime startTimeLocal = DateTime.SpecifyKind(startTime, DateTimeKind.Local);
+            //DateTime startTimeUTC = startTimeLocal.ToUniversalTime();
+
+            DateTime endTimeLocal = DateTime.SpecifyKind(endTime, DateTimeKind.Local);
+            //DateTime endTimeUTC = endTimeLocal.ToUniversalTime();
+
+            var tagValueList = await _db.Orders
+                    .Include("Customer")
+                    .Include("State")
+                    .Include("ReceiveMethod")
+                    .Include("OrdersDishesList")
+                    .Include("OrdersDishesList.Dish")
+                    .Include("FeedbacksList")
+                    .Include("FeedbacksList.Dish")
+                    .Where(u => u.OrderDate >= startTimeLocal && u.OrderDate <= endTimeLocal)
+                    .ToListAsync();
+            return tagValueList;
+        }
     }
 }

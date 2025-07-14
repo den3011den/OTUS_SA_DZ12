@@ -114,6 +114,32 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         /// <summary>
         /// Просмотр истории заказов
         /// </summary>
+        /// <param name="startOrderDate">        
+        /// 
+        /// <details>
+        /// <summary>Время начала интервала дат для фильтра по дате/времени заказа. Если пусто - по умолчанию равно текущему времени месяц
+        /// </summary>
+        /// <br />
+        /// 
+        /// Используйте локальное время сервера.
+        /// Для ввода времени используйте формат: YYYY-MM-DDTHH:MM:SS.mmmZ        
+        /// Пример: 2025-02-22T12:19:20.102Z  (для даты: 22 февраля 2025 года 12 часов 19 минут 20 секунд 102 миллисекунды)        
+        /// </details>
+        /// </param> 
+        /// 
+        /// <param name="endOrderDate">
+        /// 
+        /// <details>
+        /// <summary>Время окончания интервала дат для фильтра по дате/времени заказа. Если пусто - по умолчанию равно текущему времени
+        /// </summary>
+        /// <br />
+        /// 
+        /// Используйте локальное время сервера.        
+        /// Для ввода времени используйте формат: YYYY-MM-DDTHH:MM:SS.mmmZ        
+        /// Пример: 2025-02-22T12:19:20.102Z  (для даты: 22 февраля 2025 года 12 часов 19 минут 20 секунд 102 миллисекунды)        
+        /// </details>
+        /// </param> 
+        /// 
         /// <param name="orderById">Указывает упорядочивание по ИД заказа - ASC-по возрастанию номера заказа, DESC-по убыванию номера заказа. По умолчанию - АSC </param>
         /// <param name="itemsOnPage">Количество заказов на странице при постаничном запросе. Если itemsOnPage и pageNumber оба равны нулю - выдаются все заказы</param>
         /// <param name="pageNumber">Номер запрашиваемой страницы при постаничном запросе. Если itemsOnPage и pageNumber оба равны нулю - выдаются все заказы</param>
@@ -122,14 +148,24 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         [ProducesResponseType(typeof(OrderResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<List<OrderResponse>>> GetAllOrderAsync(string orderById = "ASC", int itemsOnPage = 0, int pageNumber = 0)
+        public async Task<ActionResult<List<OrderResponse>>> GetAllOrderAsync(DateTime? startOrderDate = null, DateTime? endOrderDate = null, string orderById = "ASC", int itemsOnPage = 0, int pageNumber = 0)
         {
+            if (startOrderDate == null)
+            {
+                startOrderDate = DateTime.Now.AddMonths(-1);
+            }
+
+            if (endOrderDate == null)
+            {
+                endOrderDate = DateTime.Now;
+            }
+
             try
             {
                 if (itemsOnPage < 0 || pageNumber < 0)
                     return BadRequest("Один из параметров itemsOnPage или pageNumber меньше нуля");
 
-                var gotOrders = await _orderRepository.GetAllAsync();
+                var gotOrders = await _orderRepository.GetOrdersByTimeIntervalOfOrderdateAsync((DateTime)startOrderDate, (DateTime)endOrderDate);
                 if (gotOrders == null)
                 {
                     return NotFound("Не найдено ни одного заказа");
