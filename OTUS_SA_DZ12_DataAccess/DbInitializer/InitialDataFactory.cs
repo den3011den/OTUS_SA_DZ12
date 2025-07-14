@@ -180,47 +180,47 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
             new Order()
             {
                 Id = 1,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddDays(-10),
                 StateId = 6,
                 Amount = 100.00,
                 CustomerId = 1,
                 ReceiveMethodId = 1,
-                ReceiveDate = DateTime.Now
+                ReceiveDate = DateTime.Now.AddDays(-10).AddHours(1)
             },
             new Order()
             {
                 Id = 2,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddDays(-9),
                 StateId = 6,
                 Amount = 1000.00,
                 CustomerId = 1,
                 ReceiveMethodId = 1,
-                ReceiveDate = DateTime.Now
+                ReceiveDate = DateTime.Now.AddDays(-9).AddHours(1)
             },
             new Order()
             {
                 Id = 3,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddDays(-8),
                 StateId = 6,
                 Amount = 500.00,
                 CustomerId = 1,
                 ReceiveMethodId = 1,
-                ReceiveDate = DateTime.Now
+                ReceiveDate = DateTime.Now.AddDays(-8).AddHours(1)
             },
             new Order()
             {
                 Id = 4,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddDays(-7),
                 StateId = 6,
                 Amount = 580.10,
                 CustomerId = 1,
                 ReceiveMethodId = 2,
-                ReceiveDate = DateTime.Now
+                ReceiveDate = DateTime.Now.AddDays(-7).AddHours(1)
             },
             new Order()
             {
                 Id = 5,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddDays(-6),
                 StateId = 1,
                 Amount = 2500.10,
                 CustomerId = 1,
@@ -229,37 +229,37 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
             new Order()
             {
                 Id = 6,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddDays(-5),
                 StateId = 6,
                 Amount = 100.00,
                 CustomerId = 3,
                 ReceiveMethodId = 1,
-                ReceiveDate = DateTime.Now
+                ReceiveDate = DateTime.Now.AddDays(-5).AddHours(1)
             },
             new Order()
             {
                 Id = 7,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddDays(-4),
                 StateId = 6,
                 Amount = 1000.00,
                 CustomerId = 3,
                 ReceiveMethodId = 1,
-                ReceiveDate = DateTime.Now
+                ReceiveDate = DateTime.Now.AddDays(-4).AddHours(1)
             },
             new Order()
             {
                 Id = 8,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddDays(-3),
                 StateId = 6,
                 Amount = 500.00,
                 CustomerId = 3,
                 ReceiveMethodId = 1,
-                ReceiveDate = DateTime.Now
+                ReceiveDate = DateTime.Now.AddDays(-3).AddHours(1)
             },
             new Order()
             {
                 Id = 9,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddMinutes(-90),
                 StateId = 3,
                 Amount = 580.10,
                 CustomerId = 3,
@@ -268,7 +268,7 @@ namespace OTUS_SA_DZ12_DataAccess.DbInitializer
             new Order()
             {
                 Id = 10,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.Now.AddMinutes(-100),
                 StateId = 3,
                 Amount = 2500.10,
                 CustomerId = 5,

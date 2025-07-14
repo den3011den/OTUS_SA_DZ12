@@ -30,12 +30,12 @@
         /// <summary>
         /// ИД клиента
         /// </summary>
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
 
         /// <summary>
         /// Клиент
         /// </summary>
-        public virtual Customer Customer { get; set; }
+        public virtual Customer? Customer { get; set; }
 
 
         /// <summary>

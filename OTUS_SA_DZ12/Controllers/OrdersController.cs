@@ -260,14 +260,25 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<OrderResponse>> CreateOrderAsync(OrderCreateRequest request)
         {
-            var foundCustomer = await _customerRepository.GetByIdAsync(request.CustomerId);
-            if (foundCustomer == null)
+
+            Customer? foundCustomer = null;
+            if (request.CustomerId != null && request.CustomerId != 0)
             {
-                return NotFound("Не найден клиент с ИД = " + request.CustomerId.ToString());
+                foundCustomer = await _customerRepository.GetByIdAsync((int)request.CustomerId);
+                if (foundCustomer == null)
+                {
+                    return NotFound("Не найден клиент с ИД = " + request.CustomerId.ToString());
+                }
+
+                if (foundCustomer.IsArchive)
+                    return BadRequest("Клиент с ИД = " + foundCustomer.Id.ToString() + " удалён в архив в справочнике клиентов");
+            }
+            else
+            {
+                foundCustomer = null;
             }
 
-            if (foundCustomer.IsArchive)
-                return BadRequest("Клиент с ИД = " + foundCustomer.Id.ToString() + " удалён в архив в справочнике клиентов");
+
 
             var foundReceiveMethod = await _receiveMethodRepository.GetByIdAsync(request.ReceiveMethodId);
             if (foundReceiveMethod == null)
@@ -319,8 +330,11 @@ namespace OTUS_SA_DZ12_WebAPI.Controllers
             orderForAdding.StateId = 1;
             orderForAdding.State = await _stateRepository.GetByIdAsync(1);
             orderForAdding.Amount = summaDishes;
-            orderForAdding.CustomerId = foundCustomer.Id;
-            orderForAdding.Customer = foundCustomer;
+            if (foundCustomer != null)
+            {
+                orderForAdding.CustomerId = foundCustomer.Id;
+                orderForAdding.Customer = foundCustomer;
+            }
             orderForAdding.ReceiveMethodId = foundReceiveMethod.Id;
             orderForAdding.ReceiveMethod = foundReceiveMethod;
 

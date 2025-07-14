@@ -14,8 +14,7 @@ namespace OTUS_SA_DZ12_Models.RobotsModels.Order
         /// ИД клиента
         /// </summary>
         [DisplayName("ИД клиента")]
-        [Required]
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
 
         /// <summary>
         /// ИД способа получения заказа
